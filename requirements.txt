@@ -2,3 +2,8 @@ pandas
 dash_bootstrap_components
 dash
 pyyaml
+gunicorn==19.7.1
+tkinter
+itertools
+json
+plotly
