@@ -11,7 +11,6 @@ sidebar = html.Div(children=
     [
         html.H3('GENeSYS-MOD Dashboard'),
         html.Br(),
-        html.H6('Dana Reulein 2024'),
         html.Br(style={'margin': '8px'}),
         html.Hr(style={'height': '2px', 'opacity': '1', 'margin': '8px'}),
     ]),
