@@ -15,7 +15,7 @@ from dash import Dash
 
 app = dash.Dash(__name__,
                 external_stylesheets=[dbc.themes.BOOTSTRAP])
-
+server = app.server
 app.title = "Dashboard"
 app.layout = html.Div([dcc.Location(id="url"), sidebar, content],)
 
