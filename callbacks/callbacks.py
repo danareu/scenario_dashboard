@@ -1,7 +1,6 @@
 import tkinter
 from tkinter import filedialog
 import pandas as pd
-from PyQt5.QtWidgets import QApplication, QFileDialog, QWidget, QPushButton, QVBoxLayout
 from dash.dependencies import Input, Output, State, MATCH, ALL
 from dash import dcc, html, dash_table
 import dash_bootstrap_components as dbc
