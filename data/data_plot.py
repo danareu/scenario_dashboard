@@ -75,8 +75,8 @@ class PlotObject:
                 if df['Region'].str.contains(r).any():
                     # sum and sort
                     technologies = \
-                    df[df['Region'] == r].groupby(by=['Technology'], as_index=False).sum().sort_values(by="Value")[
-                        'Technology'].unique()
+                        df[df['Region'] == r].groupby(by=['Technology'], as_index=False).sum().sort_values(by="Value")[
+                            'Technology'].unique()
                     for t in technologies:
                         fig.add_trace(go.Scatter(x=df[(df['Region'] == r) & (df['Technology'] == t)][x],
                                                  y=df[(df['Region'] == r) & (df['Technology'] == t)]['Value'],
@@ -94,7 +94,6 @@ class PlotObject:
                           barmode='stack',
                           font=dict(size=22)
                           )
-
 
         return fig
 
@@ -148,9 +147,9 @@ class PlotObject:
                 name=f'{i: .2f} GW',
                 text=f'{i: .2f} GW',
                 legendgroup=row["Value"],
-                showlegend=True if (index == 0) | (index == (df.shape[0]-1)) else False,
+                showlegend=True if (index == 0) | (index == (df.shape[0] - 1)) else False,
                 line=dict(width=1 if show_marker else i,
-                          color='grey'),# if (capacities is None and pie_chart is False) else "rgb(0,191,191)"),
+                          color='grey'),  # if (capacities is None and pie_chart is False) else "rgb(0,191,191)"),
                 marker=dict(size=5 if (capacities is None and pie_chart is False) else 1,
                             color="black",
                             line_color='black',
@@ -168,62 +167,80 @@ class PlotObject:
                     textfont=dict(color='black', size=9),
                     # textposition='middle center',
                     text=f'{i: .1f}', ))
-        if (capacities is not None) and (pie_chart is False):
-            for index, row in capacities.iterrows():
-                fig.add_trace(go.Scattergeo(
-                    locationmode='country names',
-                    lat=[geojson[row['Region']]['latitude']],
-                    lon=[geojson[row['Region']]['longitude']],
-                    mode='markers',
-                    name=f'{row["Region"]}, {row["Value"]: .2f} GW',
-                    # text=f'{i: .2f} GW',
-                    legendgroup=row["Value"],
-                    showlegend=True if (index == 0) | (index == capacities.shape[0] - 1) else False,
-                    marker=dict(size=row['Value'] / 3,
-                                color=colour_codes['Hydrogen'] if row['Value'] > 0 else "rgb(229,229,229)",
-                                line_width=0.5,
-                                sizemode='area')))
-
-        fig.update_layout(height=2000)
-        if pie_chart:
-            capacities = capacities[capacities["Technology"].isin(colour_codes.keys())]
-
-            # determine size of pie rel to sum of inst capacities
-            max_capa_df = capacities.groupby(by=["Region", "Year"], as_index=False).sum()
-            max_capa = max_capa_df[max_capa_df['Year']==year]['Value'].max()
-            for r in capacities["Region"].unique():
-                x_domain = (geojson[r]['longitude'] - lonaxis[0]) / (lonaxis[1] - lonaxis[0])
-                y_domain = (geojson[r]['latitude'] - lataxis[0]) / (lataxis[1] - lataxis[0])  # no negative number there
-                colors = [colour_codes[c] for c in
-                          capacities[(capacities['Region'] == r) & (capacities["Year"] == year)]['Technology']]
-                # factor to determine rel size of pie
-                if capacities[(capacities['Region'] == r) & (capacities["Year"] == year)]['Value'].sum() > 0:
-                    #factor = capacities[(capacities['Region'] == r) & (capacities["Year"] == year)]['Value'].sum()/max_capa
-                    pie_trace = go.Pie(
-                        labels=capacities[(capacities['Region'] == r) & (capacities["Year"] == year)]['Technology'],
-                        values=capacities[(capacities['Region'] == r) & (capacities["Year"] == year)]['Value'],
-                        marker=dict(colors=colors),
-                        textinfo='none',
-                        domain=dict(x=[max(0, x_domain - 0.02), x_domain + 0.02],
-                                    y=[max(0, y_domain - 0.02), y_domain + 0.02])
-                    )
-                    fig.add_trace(pie_trace)
+        if capacities is not None:
+            # plot pie charts with capacities
+            if pie_chart:
+                list_traces = make_pie_chart_capacities(capacities, geojson, lataxis, lonaxis, year)
+                for i in list_traces:
+                    fig.add_trace(i)
+            else:
+                for index, row in capacities.iterrows():
+                    fig.add_trace(go.Scattergeo(
+                        locationmode='country names',
+                        lat=[geojson[row['Region']]['latitude']],
+                        lon=[geojson[row['Region']]['longitude']],
+                        mode='markers',
+                        name=f'{row["Region"]}, {row["Value"]: .2f} GW',
+                        # text=f'{i: .2f} GW',
+                        legendgroup=row["Value"],
+                        showlegend=True if (index == 0) | (index == capacities.shape[0] - 1) else False,
+                        marker=dict(size=row['Value'] / 3,
+                                    color=colour_codes['Hydrogen'] if row['Value'] > 0 else "rgb(229,229,229)",
+                                    line_width=0.5,
+                                    sizemode='area')))
 
         fig.update_layout(title_text=f'Total Trade Capacities [GW] for {scenario} in {year}',
-                          #width=450,
                           height=2000,
-                          geo=(go.layout.Geo(  # scope='europe',
+                          geo=(go.layout.Geo(
                               lataxis=dict(range=[lataxis[0], lataxis[1]]),
                               lonaxis=dict(range=[lonaxis[0], lonaxis[1]]),
                               showland=True,
                               countrycolor='white',
-                              #oceancolor="rgb(0,35,74)",
-                              #showframe=False,
+                              # oceancolor="rgb(0,35,74)",
+                              # showframe=False,
                               showlakes=True,
-                              #lakecolor="rgb(0,35,74)",
-                              #coastlinecolor='rgb(0,35,74)',
+                              # lakecolor="rgb(0,35,74)",
+                              # coastlinecolor='rgb(0,35,74)',
                               showcoastlines=False,
                               landcolor='rgb(229, 229, 229)')))
-
-
         return fig
+
+
+def make_pie_chart_capacities(capacities: list, geojson: dict, lataxis: list, lonaxis: list, year: int) -> list:
+    """
+    Create pie chart traces based on capacities data.
+
+    Parameters:
+    - capacities (List[Dict[str, Any]]): A list of dictionaries containing capacities data.
+    - geojson (Dict[str, Any]): A dictionary containing geojson data.
+    - lataxis (List[float]): A list containing latitude axis limits.
+    - lonaxis (List[float]): A list containing longitude axis limits.
+    - year (int): The year for which the data is to be plotted.
+
+    Returns:
+    - list_traces (List[Any]): A list of pie chart traces.
+    """
+
+    # Filter capacities based on available technologies
+    capacities = capacities[capacities["Technology"].isin(colour_codes.keys())]
+    list_traces = []
+
+    # Iterate over unique regions
+    for r in capacities["Region"].unique():
+        x_domain = (geojson[r]['longitude'] - lonaxis[0]) / (lonaxis[1] - lonaxis[0])
+        y_domain = (geojson[r]['latitude'] - lataxis[0]) / (lataxis[1] - lataxis[0])
+        # Extract colors for the pie chart
+        colors = [colour_codes[c] for c in
+                  capacities[(capacities['Region'] == r) & (capacities["Year"] == year)]['Technology']]
+        # Check if there is data for the year
+        if capacities[(capacities['Region'] == r) & (capacities["Year"] == year)]['Value'].sum() > 0:
+            pie_trace = go.Pie(
+                labels=capacities[(capacities['Region'] == r) & (capacities["Year"] == year)]['Technology'],
+                values=capacities[(capacities['Region'] == r) & (capacities["Year"] == year)]['Value'],
+                marker=dict(colors=colors),
+                textinfo='none',
+                domain=dict(x=[max(0, x_domain - 0.02), x_domain + 0.02],
+                            y=[max(0, y_domain - 0.02), y_domain + 0.02])
+            )
+            list_traces.append(pie_trace)
+    return list_traces
