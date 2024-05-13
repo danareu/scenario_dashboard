@@ -31,34 +31,50 @@ class PlotObject:
                 pd.Series(technology_list).unique()}
 
     def stacked_bar_integrated(self, aggregation=True):
+        """
+        Generate a stacked bar plot integrated with subplots.
 
+        Args:
+            aggregation (bool, optional): Whether to aggregate the data. Defaults to True.
+
+        Returns:
+            plotly.graph_objs._figure.Figure: The generated figure object.
+        """
+
+        # Create subplots
         fig = make_subplots(rows=len(self.year),
                             cols=1,
-                            subplot_titles=[f'{self.key}_{int(y)}_{self.sector}' for y in
-                                            self.year])
+                            subplot_titles=[f'{self.key}_{int(y)}_{self.sector}' for y in self.year])
 
+        list_technology = []
+        # Iterate over dataframes and scenarios
         for df, s in zip(self.df_list, self.scenarios):
-
-            # search for better way
+            # Apply aggregation if required
             region_col = 'Region'
             if aggregation:
                 df = df.groupby(by=['Year', 'Technology', 'Region_agg'], as_index=False).sum(numeric_only=True)
                 region_col = 'Region_agg'
             df['Scenario'] = s
+
+            # Iterate over years
             for j, y in enumerate(self.year, start=1):
+                # Iterate over unique technologies for each year
                 for t in df[df['Year'] == y]['Technology'].unique():
+                    # Add trace to subplot
                     fig.add_trace(go.Bar(x=[df[(df['Year'] == y) & (df['Technology'] == t)][region_col],
                                             df[(df['Year'] == y) & (df['Technology'] == t)]['Scenario']],
                                          y=df[(df['Year'] == y) & (df['Technology'] == t)]['Value'],
                                          name=t,
                                          marker_color=self.color_to_tech[t],
                                          legendgroup=t,
-                                         showlegend=True if j == 1 else False,
+                                         showlegend=True if t not in list_technology else False,
                                          ), row=j, col=1)
+                    list_technology.append(t)
 
+        # Update layout of the figure
         fig.update_layout(barmode='stack', height=2700, font=dict(size=26))
         fig.update_yaxes(title_text=header_mapping[self.key]["units"])
-        # fig.update_yaxes(range=[0, self.df_list[0]['Value'].max()])
+
         return fig
 
     def stacked_bar_side(self, x="Year"):
