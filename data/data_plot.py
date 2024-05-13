@@ -61,41 +61,53 @@ class PlotObject:
         # fig.update_yaxes(range=[0, self.df_list[0]['Value'].max()])
         return fig
 
-    def stacked_bar_side(self, x="Year"):
+     def stacked_bar_integrated(self, aggregation=True):
+        """
+        Generate a stacked bar plot integrated with subplots.
 
-        # make subplot titles
-        region_list = pd.Series([i for df in self.df_list for i in df['Region']]).unique()
-        fig = make_subplots(rows=len(region_list),
-                            cols=len(self.scenarios),
-                            subplot_titles=[f"{r}_{s}" for r in region_list for s in self.scenarios])
+        Args:
+            aggregation (bool, optional): Whether to aggregate the data. Defaults to True.
 
-        for i, df in enumerate(self.df_list, start=1):
-            for j, r in enumerate(region_list, start=1):
-                # check if region is in data
-                if df['Region'].str.contains(r).any():
-                    # sum and sort
-                    technologies = \
-                        df[df['Region'] == r].groupby(by=['Technology'], as_index=False).sum().sort_values(by="Value")[
-                            'Technology'].unique()
-                    for t in technologies:
-                        fig.add_trace(go.Scatter(x=df[(df['Region'] == r) & (df['Technology'] == t)][x],
-                                                 y=df[(df['Region'] == r) & (df['Technology'] == t)]['Value'],
-                                                 name=t,
-                                                 mode='lines',
-                                                 fillcolor=self.color_to_tech[t],
-                                                 line_color=self.color_to_tech[t],
-                                                 legendgroup=t,
-                                                 stackgroup=r,
-                                                 showlegend=True if j == 2 else False,
-                                                 ), row=j, col=i)
+        Returns:
+            plotly.graph_objs._figure.Figure: The generated figure object.
+        """
 
+        # Create subplots
+        fig = make_subplots(rows=len(self.year),
+                            cols=1,
+                            subplot_titles=[f'{self.key}_{int(y)}_{self.sector}' for y in self.year])
+
+        list_technology = []
+        # Iterate over dataframes and scenarios
+        for df, s in zip(self.df_list, self.scenarios):
+            # Apply aggregation if required
+            region_col = 'Region'
+            if aggregation:
+                df = df.groupby(by=['Year', 'Technology', 'Region_agg'], as_index=False).sum(numeric_only=True)
+                region_col = 'Region_agg'
+            df['Scenario'] = s
+
+            # Iterate over years
+            for j, y in enumerate(self.year, start=1):
+                # Iterate over unique technologies for each year
+                for t in df[df['Year'] == y]['Technology'].unique():
+                    # Add trace to subplot
+                    fig.add_trace(go.Bar(x=[df[(df['Year'] == y) & (df['Technology'] == t)][region_col],
+                                            df[(df['Year'] == y) & (df['Technology'] == t)]['Scenario']],
+                                         y=df[(df['Year'] == y) & (df['Technology'] == t)]['Value'],
+                                         name=t,
+                                         marker_color=self.color_to_tech[t],
+                                         legendgroup=t,
+                                         showlegend=True if t not in list_technology else False,
+                                         ), row=j, col=1)
+                    list_technology.append(t)
+
+        # Update layout of the figure
+        fig.update_layout(barmode='stack', height=2700, font=dict(size=26))
         fig.update_yaxes(title_text=header_mapping[self.key]["units"])
-        fig.update_layout(height=13700,
-                          barmode='stack',
-                          font=dict(size=22)
-                          )
 
         return fig
+
 
     def create_dict_tade_geo_fig(self, capacities=[]):
         """
