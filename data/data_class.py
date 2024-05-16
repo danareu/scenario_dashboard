@@ -1,6 +1,5 @@
 from data.config import header_mapping, aggregation, key_to_julia, hydrogen_technologies
 import pandas as pd
-import os
 import json
 
 
