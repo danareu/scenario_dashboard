@@ -57,7 +57,7 @@ content = html.Div(children=
         dbc.Col(children=[dcc.Dropdown(
             options=[
                 {'label': 'Installed Capacities [GW]', 'value': 'capacities'},
-                {'label': 'Annual Production [TWh]', 'value': 'production'},
+                {'label': 'Production [TWh]', 'value': 'operation'},
                 {'label': 'Export 2050 [TWh]', 'value': 'export'},
                 {'label': 'Demand [TWh]', 'value': 'Demand [TWh]', 'disabled': True},
                 {'label': 'Hydrogen Infrastructure', 'value': 'hydrogen_infrastructure','disabled': True},
@@ -72,6 +72,8 @@ content = html.Div(children=
     dbc.Row(children=dcc.Tabs([
         dcc.Tab(label='Overview', children=[], id='summary'),
         dcc.Tab(label='Regions', children=[], id="individual"),
+        dcc.Tab(label='Year', children=[], id="yearly"),
+
     ], id="my_tabs"))
 
 

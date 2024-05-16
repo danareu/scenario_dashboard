@@ -100,6 +100,7 @@ def get_callbacks(app):
     @app.callback(
         [Output(component_id='summary', component_property='children'),
          Output(component_id='individual', component_property='children'),
+         Output(component_id='yearly', component_property='children'),
          Output(component_id="loading-output-1", component_property="children")],
         [Input(component_id={'type': 'dynamic-scenario', 'index': ALL}, component_property='value'),
          Input(component_id={'type': 'dynamic-directory', 'index': ALL}, component_property='children'),
@@ -113,12 +114,15 @@ def get_callbacks(app):
             # create list for dfs
             list_dfs = []
             capacities = []
+            df_list_yearly =[]
             for s, d in zip(scenario, directory):
                 data_rw = DataRaw(directory=d, key=key, sector="Power")
-                if key in ["capacities", "production"]:
+                if key in ["capacities", "operation"]:
                     data_rw.filter_sector()
                     data_rw.aggregate_technologies()
                     data_rw.aggregate_regions()
+                    if key == "operation":
+                        data_rw.add_storage()
                 elif key in ["hydrogen_infrastructure"]:
                     # data_rw.aggregate_column(column="TS", method="sum")
                     data_rw.filter_column(column="Fuel", by_filter=["H2"])
@@ -131,8 +135,6 @@ def get_callbacks(app):
                 elif key in ['trade_map']:
                     data_rw.filter_column(column="Fuel", by_filter=[fuel])
                     data_rw.replace_offshore()
-
-
                     #prepare data for the pie chart
                     df = DataRaw(directory=d, key='capacities')
                     df.replace_offshore()
@@ -146,14 +148,29 @@ def get_callbacks(app):
                     data_rw.pivot_table()
                 list_dfs.append(data_rw.df)
 
+                ## group the data
+                if key in ["capacities", "operation"]:
+                    for df in list_dfs:
+                        df = df.groupby(by=['Year', 'Technology', 'Region'], as_index=False).sum(numeric_only=True)
+                        df_list_yearly.append(df)
+
+
+
             # plot the graphs
             plt_obj = PlotObject(key=key, year=[2018, 2030, 2040, 2050], sector="Power", df_list=list_dfs,
                                  scenarios=scenario)
 
-            if key in ["capacities", "production"]:
+            if key in ["capacities"]:
                 return [[dcc.Graph(figure=plt_obj.stacked_bar_integrated(aggregation=True))],
-                        [dcc.Graph(figure=plt_obj.stacked_bar_side())],
+                        [dcc.Graph(figure=plt_obj.stacked_bar_side(list_dfs=list_dfs))],
+                        [],
                         []]
+            elif key in ["operation"]:
+                return [[dcc.Graph(figure=plt_obj.stacked_bar_integrated(aggregation=True))],
+                        [dcc.Graph(figure=plt_obj.stacked_bar_side(list_dfs=df_list_yearly))],
+                        [dcc.Graph(figure=plt_obj.stacked_bar_side(list_dfs=list_dfs, yearly=True, x="TS"))],
+                        []
+                        ]
             elif key in ['trade_map', 'hydrogen_infrastructure']:
                 figure_dict = plt_obj.create_dict_tade_geo_fig(capacities=capacities)
                 lis = [dbc.Col(children=[dbc.Row(children=[dcc.Graph(figure=y) for y in figure_dict[s]])]) for s in
@@ -161,6 +178,7 @@ def get_callbacks(app):
                 return [[dbc.Row(children=lis, style={"height":2000})],
                         # return [[dbc.Row(children=[dbc.Col(children=[html.P('Scenario:', style=HEADER)]),
                         # dbc.Col(children=[html.P('Scenario:', style=HEADER)])])],
+                        [],
                         [],
                         []]
             elif key in ["export"]:
@@ -175,6 +193,7 @@ def get_callbacks(app):
 
                 # lis = [dbc.Col(children=[dbc.Row(children=[dash_table.DataTable(df.to_dict('records'), [{"name": i, "id": i} for i in df.columns])])]) for df in list_dfs]
                 return [[dbc.Row(children=tables)],
+                        [],
                         [],
                         []]
 

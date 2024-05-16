@@ -1,5 +1,6 @@
 from data.config import header_mapping, aggregation, key_to_julia, hydrogen_technologies
 import pandas as pd
+import os
 import json
 
 
@@ -24,7 +25,7 @@ class DataRaw:
             lines = f.read().splitlines()
             data_list = []
             for i, l in enumerate(lines, start=-1):
-                if l.startswith(key):
+                if l.startswith(f"{key}["):
                     m = l.split('[', 1)[1].split(']')[0].split(",")
                     m.append(l.split(" ")[-1])
                     data_list.append(m)
@@ -61,7 +62,7 @@ class DataRaw:
         df['Value'] = pd.to_numeric(df['Value'])
 
         # convert unit if required from PJ to TWh
-        if key in ["ProductionByTechnologyAnnual", "Export", "UseAnnual"]:
+        if key in ["ProductionByTechnologyAnnual", "Export", "UseAnnual", "RateOfActivity", "ProductionByTechnology"]:
             df['Value'] = (df['Value'] / 3.6).round(0)
         # remove x from nodes
         for r in [col for col in df if col.startswith('Region')]:
@@ -100,6 +101,10 @@ class DataRaw:
     def pivot_table(self):
         self.df = self.df.pivot(index='Region1', columns='Region2', values='Value')
         self.df.reset_index(inplace=True, drop=False)
+    def add_storage(self):
+
+         self.df['TS'] = self.df['TS'].astype('float64')
+         # multiply with output activity ration and timeslices
 
     # def dispatch(self):
     #     # data with operation

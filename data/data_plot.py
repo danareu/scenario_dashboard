@@ -19,7 +19,6 @@ class PlotObject:
                                                                       "export"] else ""
 
     def create_col_palette(self):
-
         ## cycle through color palette
         palette = cycle(px.colors.qualitative.Light24)
         technology_list = []
@@ -77,7 +76,7 @@ class PlotObject:
 
         return fig
 
-    def stacked_bar_side(self, x="Year"):
+    def stacked_bar_side(self, list_dfs, x="Year", yearly=False):
 
         # make subplot titles
         region_list = pd.Series([i for df in self.df_list for i in df['Region']]).unique()
@@ -85,7 +84,10 @@ class PlotObject:
                             cols=len(self.scenarios),
                             subplot_titles=[f"{r}_{s}" for r in region_list for s in self.scenarios])
 
-        for i, df in enumerate(self.df_list, start=1):
+        for i, df in enumerate(list_dfs, start=1):
+            if yearly:
+                df = df[df["Year"] == 2050]
+            list_technology = []
             for j, r in enumerate(region_list, start=1):
                 # check if region is in data
                 if df['Region'].str.contains(r).any():
@@ -94,7 +96,7 @@ class PlotObject:
                         df[df['Region'] == r].groupby(by=['Technology'], as_index=False).sum().sort_values(by="Value")[
                             'Technology'].unique()
                     for t in technologies:
-                        fig.add_trace(go.Scatter(x=df[(df['Region'] == r) & (df['Technology'] == t)][x],
+                        fig.add_trace(go.Scatter(x=df[(df['Region'] == r) & (df['Technology']== t)][x],
                                                  y=df[(df['Region'] == r) & (df['Technology'] == t)]['Value'],
                                                  name=t,
                                                  mode='lines',
@@ -110,7 +112,6 @@ class PlotObject:
                           barmode='stack',
                           font=dict(size=22)
                           )
-
         return fig
 
     def create_dict_tade_geo_fig(self, capacities=[]):

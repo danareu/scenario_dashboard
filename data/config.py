@@ -67,6 +67,9 @@ order_legend = ['Gas', 'Nuclear', 'Oil', 'Biomass', 'Hydro Reservoir', 'Hydro Ru
 header_mapping = {"TotalCapacityAnnual":
                       {"columns": ["Year", "Technology", "Region", "Value"],
                        "units": "GW"},
+                  "ProductionByTechnology":
+                      {"columns": ["Year", "TS","Technology", "Fuel", "Region", "Value"],
+                       "units": "TWh"},
                   "RateOfActivity":
                       {"columns": ["Year", "TS", "Technology", "Mode", "Region", "Value"],
                        "units": "TWh"},
@@ -87,12 +90,11 @@ header_mapping = {"TotalCapacityAnnual":
                   "Export":
                       {"columns": ["Year", "TS", "Fuel", "Region1", "Region2", "Value"]}}
 
-key_to_julia = {'production': 'ProductionByTechnologyAnnual',
-                'capacities': 'TotalCapacityAnnual',
+key_to_julia = {'capacities': 'TotalCapacityAnnual',
                 'trade_map': 'TotalTradeCapacity',
                 'demand': 'UseAnnual',
                 'storage_level': 'StorageLevelTSStart',
-                'operation': 'RateOfActivity',
+                'operation': 'ProductionByTechnology',
                 'export': "Export",
                 'discountedcosts': 'TotalDiscountedCostByTechnology',
                 'hydrogen_infrastructure': "Export"}
