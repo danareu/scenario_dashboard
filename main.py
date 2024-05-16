@@ -8,9 +8,8 @@ import os
 from dash import Dash
 
 
-
-#os.environ['XDG_RUNTIME_DIR'] = '/tmp/runtime-danare'
-#https://stackoverflow.com/questions/69570145/how-to-change-the-website-tab-name-in-dash-plotly-using-python
+# os.environ['XDG_RUNTIME_DIR'] = '/tmp/runtime-danare'
+# https://stackoverflow.com/questions/69570145/how-to-change-the-website-tab-name-in-dash-plotly-using-python
 
 
 app = dash.Dash(__name__,

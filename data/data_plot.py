@@ -104,11 +104,13 @@ class PlotObject:
                                                  line_color=self.color_to_tech[t],
                                                  legendgroup=t,
                                                  stackgroup=r,
-                                                 showlegend=True if j == 2 else False,
+                                                 showlegend=True if t not in list_technology else False,
                                                  ), row=j, col=i)
+                        list_technology.append(t)
 
         fig.update_yaxes(title_text=header_mapping[self.key]["units"])
-        fig.update_layout(height=13700,
+        fig.update_layout(
+                        #height=13700,
                           barmode='stack',
                           font=dict(size=22)
                           )
