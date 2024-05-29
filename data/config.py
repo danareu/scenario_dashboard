@@ -24,6 +24,7 @@ aggregation = {
     'P_Biomass': 'Biomass',
     'P_Biomass_CCS': 'Biomass',
     'D_PHS': "Pumped Hydro",
+    'D_Battery_Li-Ion': 'Battery Li-Ion',
     'D_PHS_Residual': "Pumped Hydro",
 }
 
