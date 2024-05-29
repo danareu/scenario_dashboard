@@ -9,10 +9,10 @@ sidebar = html.Div(children=
 [
     dbc.Row(children=
     [
-        html.H3('GENeSYS-MOD Dashboard'),
+        html.H3('Load Data'),
         html.Br(),
         html.Br(style={'margin': '8px'}),
-        html.Hr(style={'height': '2px', 'opacity': '1', 'margin': '8px'}),
+        #html.Hr(style={'height': '2px', 'opacity': '1', 'margin': '8px'}),
     ]),
 
     dbc.Row(children=
@@ -26,6 +26,8 @@ sidebar = html.Div(children=
                        id='add',
                        n_clicks=0,
                        style=BUTTON,
+                       outline=True,
+                       color="primary",
                        className="d-grid"
                        )
         ]),
@@ -34,6 +36,8 @@ sidebar = html.Div(children=
                        id='save',
                        n_clicks=0,
                        style=BUTTON,
+                       color="primary",
+                       outline=True,
                        className="d-grid"
                        ),
             dcc.Loading(
@@ -48,8 +52,8 @@ sidebar = html.Div(children=
 
 content = html.Div(children=
 [
-    dbc.Row(children=[dbc.Col(children=html.H3('Scenario Explorer'), style={'margin': '8px'}),
-                      dbc.Col(children=my_img())
+    dbc.Row(children=[dbc.Col(children=html.H2('GENeSYS-MOD Dashboard',
+                                               className="bg-primary text-white p-2 mb-2 text-center"), style={'margin': '8px'}),
                       ]),
     dbc.Row(children=
     [
