@@ -110,7 +110,7 @@ class PlotObject:
 
         fig.update_yaxes(title_text=header_mapping[self.key]["units"])
         fig.update_layout(
-                        #height=13700,
+                        height=450*len(region_list),
                           barmode='stack',
                           font=dict(size=22)
                           )

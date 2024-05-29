@@ -61,8 +61,9 @@ class DataRaw:
         df['Value'] = pd.to_numeric(df['Value'])
 
         # convert unit if required from PJ to TWh
-        if key in ["ProductionByTechnologyAnnual", "Export", "UseAnnual", "RateOfActivity", "ProductionByTechnology"]:
-            df['Value'] = (df['Value'] / 3.6).round(0)
+        if key in ["ProductionByTechnologyAnnual", "Export", "UseAnnual", "RateOfActivity", "ProductionByTechnology", "ProductionByTechnology"]:
+            df['Value'] = (df['Value'] / 3.6)#.round(0)
+
         # remove x from nodes
         for r in [col for col in df if col.startswith('Region')]:
             df[r] = df[r].str.replace(r'x', '', regex=True)
