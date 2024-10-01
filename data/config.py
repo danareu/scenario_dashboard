@@ -55,15 +55,18 @@ colour_codes = {
     'NO3': 'rgb(234,197,99)',
     'NO4': 'rgb(240,243,190)',
     'NO5': 'rgb(199,197,193)',
-    'NO2': 'rgb(230,111,81)'
+    'NO2': 'rgb(230,111,81)',
+    "Infeasibility_Power": "grey",
 
 }
+
+storage = {"D_PHS", "S_Battery_Li-Ion", "S_Battery_Redox"}
 
 agg_countries = {
     'NO': ['NO1', 'NO2', 'NO3', 'NO4', 'NO5', 'OFF_NO'],
 }
 
-order_legend = ['Gas', 'Nuclear', 'Oil', 'Biomass', 'Hydro Reservoir', 'Hydro Run-of-River', 'Pumped Hydro', 'Wind Onshore', 'Wind Offshore', 'PV']
+order_legend = ['Gas', 'Nuclear', 'Oil', 'Biomass', 'Hydro Reservoir', 'Hydro Run-of-River', 'Pumped Hydro', 'Wind Onshore', 'Wind Offshore', 'PV', "Infeasibility_Power"]
 
 header_mapping = {"TotalCapacityAnnual":
                       {"columns": ["Year", "Technology", "Region", "Value"],
@@ -80,6 +83,9 @@ header_mapping = {"TotalCapacityAnnual":
                   "StorageLevelTSStart":
                       {"columns": ["Technology", "Year", "TS", "Region", "Value"],
                        "units": "TWh"},
+                  "Demand":
+                      {"columns": ["Year", "TS", "Technology", "Region", "Value"],
+                       "units": "TWh"},
                   "UseAnnual":
                       {"columns": ["Year", "Fuel", "Region", "Value"],
                        "units": "TWh"},
@@ -93,7 +99,7 @@ header_mapping = {"TotalCapacityAnnual":
 
 key_to_julia = {'capacities': 'TotalCapacityAnnual',
                 'trade_map': 'TotalTradeCapacity',
-                'demand': 'UseAnnual',
+                "demand":"Demand",
                 'storage_level': 'StorageLevelTSStart',
                 'operation': 'ProductionByTechnology',
                 'export': "Export",

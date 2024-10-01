@@ -163,3 +163,4 @@ CHP_Hydrogen_FuelCell;CHP
 CHP_Oil;CHP
 Infeasibility_Mob_Passenger;Transportation
 Infeasibility_Mob_Freight;Transportation
+Infeasibility_Power;Power

@@ -26,7 +26,7 @@ def get_callbacks(app):
             root.attributes("-topmost", True)
             root.withdraw()
             file_directory = filedialog.askopenfilename(title='Select Solution File',
-                                                        #initialdir='/cluster/home/danare/git/GENeSYS-MOD/dev_jl/results',
+                                                        initialdir='/cluster/home/danare/git/dana/results/spatial',
                                                         filetypes=(
                                                         ('text files', '*.txt'), ('solution files', '*.sol')))
             root.destroy()
@@ -114,7 +114,6 @@ def get_callbacks(app):
             # create list for dfs
             list_dfs = []
             capacities = []
-            df_list_yearly =[]
             for s, d in zip(scenario, directory):
                 data_rw = DataRaw(directory=d, key=key, sector="Power")
                 if key in ["capacities", "operation"]:
@@ -122,7 +121,8 @@ def get_callbacks(app):
                     data_rw.aggregate_technologies()
                     data_rw.aggregate_regions()
                     if key == "operation":
-                        data_rw.add_storage()
+                        demand = DataRaw(directory=d, key="demand", sector="Power")
+                        data_rw.add_demand(demand_df=demand.df)
                 elif key in ["hydrogen_infrastructure"]:
                     # data_rw.aggregate_column(column="TS", method="sum")
                     data_rw.filter_column(column="Fuel", by_filter=["H2"])
@@ -150,10 +150,7 @@ def get_callbacks(app):
 
                 ## group the data
                 if key in ["capacities", "operation"]:
-                    for df in list_dfs:
-                        df = df.groupby(by=['Year', 'Technology', 'Region'], as_index=False).sum(numeric_only=True)
-                        df_list_yearly.append(df)
-
+                    df_list_yearly = [df.groupby(by=['Year', 'Technology', 'Region'], as_index=False).sum(numeric_only=True) for df in list_dfs]
 
 
             # plot the graphs
@@ -167,8 +164,8 @@ def get_callbacks(app):
                         []]
             elif key in ["operation"]:
                 return [[dcc.Graph(figure=plt_obj.stacked_bar_integrated(aggregation=True))],
-                        [dcc.Graph(figure=plt_obj.stacked_bar_side(list_dfs=df_list_yearly))],
-                        [dcc.Graph(figure=plt_obj.stacked_bar_side(list_dfs=list_dfs, yearly=True, x="TS"))],
+                        [dcc.Graph(figure=plt_obj.stacked_bar_side(list_dfs=df_list_yearly, x="Year", yearly=False))],
+                        [dcc.Graph(figure=plt_obj.stacked_bar_side(list_dfs=list_dfs, x="TS", yearly=True,))],
                         []
                         ]
             elif key in ['trade_map', 'hydrogen_infrastructure']:

@@ -35,8 +35,7 @@ class DataRaw:
     def filter_sector(self):
         # filter only POWER sector technologies
         # TO more dynamic user input
-        df_input = pd.read_csv(
-            "config/Tag_Technology_to_Sector.csv",
+        df_input = pd.read_csv('/cluster/home/danare/git/scenario_dashboard/config/Tag_Technology_to_Sector.csv',
             delimiter=";")
         self.df = pd.merge(right=self.df, left=df_input, left_on="Technology", right_on="Technology", how="outer")
         # consider storages if power sector
@@ -64,9 +63,11 @@ class DataRaw:
         if key in ["ProductionByTechnologyAnnual", "Export", "UseAnnual", "RateOfActivity", "ProductionByTechnology", "ProductionByTechnology"]:
             df['Value'] = (df['Value'] / 3.6)#.round(0)
 
-        # remove x from nodes
-        for r in [col for col in df if col.startswith('Region')]:
-            df[r] = df[r].str.replace(r'x', '', regex=True)
+        # adapt storage charging and discharging
+        # if key == "ProductionByTechnology":
+        #     for s in ["D_PHS", "D_Battery_Li-Ion", "D_Battery_Redox"]:
+        #         if s in df["Technology"].unique():
+        #             df.loc[(df["Mode"] == 1) & (df["Technology"] == s), "Value"] *= -1
 
         return df
 
@@ -106,13 +107,18 @@ class DataRaw:
          self.df['TS'] = self.df['TS'].astype('float64')
          # multiply with output activity ration and timeslices
 
-    # def dispatch(self):
-    #     # data with operation
-    #     self.filter_sector()
-    #     self.aggregate_technologies()
-    #     #storage activity
-    #     strg = self.read_sol_file(key="StorageLevelTSStart")
-    #     merged_df = pd.concat([self.df, strg])
-    #     merged_df.to_csv("test.csv")
-    #
-    #     pass
+
+
+         #self.df.sort_values(by="TS", ascending=True, inplace=True)
+         # TO DO add storage
+         #strg = self.read_sol_file(key="StorageLevelTSStart")
+         #merged_df = pd.concat([self.df, strg])
+         #merged_df.to_csv("test.csv")
+
+    def add_demand(self, demand_df):
+
+        # rename columns
+        demand_df.replace(to_replace="Power", value="Demand", inplace=True)
+        demand_df["Value"] = demand_df["Value"]/3.6
+        self.df = pd.concat([self.df, demand_df])
+        self.df['TS'] = pd.to_numeric(self.df['TS'])

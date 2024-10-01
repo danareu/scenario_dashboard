@@ -83,10 +83,9 @@ class PlotObject:
         fig = make_subplots(rows=len(region_list),
                             cols=len(self.scenarios),
                             subplot_titles=[f"{r}_{s}" for r in region_list for s in self.scenarios])
-
         for i, df in enumerate(list_dfs, start=1):
             if yearly:
-                df = df[df["Year"] == 2050]
+                df = df[df["Year"] == 2030]
             list_technology = []
             for j, r in enumerate(region_list, start=1):
                 # check if region is in data
@@ -96,17 +95,30 @@ class PlotObject:
                         df[df['Region'] == r].groupby(by=['Technology'], as_index=False).sum().sort_values(by="Value")[
                             'Technology'].unique()
                     for t in technologies:
-                        fig.add_trace(go.Scatter(x=df[(df['Region'] == r) & (df['Technology']== t)][x],
-                                                 y=df[(df['Region'] == r) & (df['Technology'] == t)]['Value'],
-                                                 name=t,
-                                                 mode='lines',
-                                                 fillcolor=self.color_to_tech[t],
-                                                 line_color=self.color_to_tech[t],
-                                                 legendgroup=t,
-                                                 stackgroup=r,
-                                                 showlegend=True if t not in list_technology else False,
-                                                 ), row=j, col=i)
-                        list_technology.append(t)
+                        sorted_df = df[(df['Region'] == r) & (df['Technology'] == t)].sort_values(by=x)
+                        if t == "Demand":
+                            fig.add_trace(
+                                go.Scatter(x=sorted_df[x],
+                                           y=sorted_df['Value'],
+                                           name="Demand",
+                                           mode='lines',
+                                           fill='none',
+                                           stackgroup="Demand",
+                                           showlegend=True if t not in list_technology else False,
+                                           marker=dict(color="maroon"),
+                                           ), row=j, col=i)
+                        else:
+                            fig.add_trace(go.Scatter(x=sorted_df[x],
+                                                     y=sorted_df['Value'],
+                                                     name=t,
+                                                     mode='lines',
+                                                     fillcolor=self.color_to_tech[t],
+                                                     line_color=self.color_to_tech[t],
+                                                     legendgroup=t,
+                                                     stackgroup=r,
+                                                     showlegend=True if t not in list_technology else False,
+                                                     ), row=j, col=i)
+                            list_technology.append(t)
 
         fig.update_yaxes(title_text=header_mapping[self.key]["units"])
         fig.update_layout(
@@ -222,6 +234,7 @@ class PlotObject:
                               # coastlinecolor='rgb(0,35,74)',
                               showcoastlines=False,
                               landcolor='rgb(229, 229, 229)')))
+        fig.write_html("test.html")
         return fig
 
 
