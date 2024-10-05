@@ -65,7 +65,7 @@ class DataRaw:
 
         # convert unit if required from PJ to TWh
         if key in ["ProductionByTechnologyAnnual", "Export", "UseAnnual", "RateOfActivity", "ProductionByTechnology", "ProductionByTechnology"]:
-            df['Value'] = (df['Value'] / 3.6)#.round(0)
+            df['Value'] = (df['Value'] / 3.6).round(0)
 
         # adapt storage charging and discharging
         # if key == "ProductionByTechnology":
