@@ -1,11 +1,8 @@
-import pandas as pd
 import dash_bootstrap_components as dbc
 import dash
 from layout.global_layout import content, sidebar
 from dash import dcc, html
 from callbacks.callbacks import get_callbacks
-import os
-from dash import Dash
 
 
 # os.environ['XDG_RUNTIME_DIR'] = '/tmp/runtime-danare'

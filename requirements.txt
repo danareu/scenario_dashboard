@@ -6,3 +6,4 @@ tkinter
 itertools
 json
 plotly
+os

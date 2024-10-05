@@ -1,13 +1,17 @@
 from data.config import header_mapping, aggregation, key_to_julia, hydrogen_technologies
 import pandas as pd
 import json
+import os
+
+
 
 
 def read_geojson_file():
     """
     Returns: Reads json with geolocations for regions
     """
-    with open('/cluster/home/danare/git/Dashboard/config/geolocation.json', 'r') as fp:
+    path = os.getcwd() + "/config/geolocation.json"
+    with open(path, 'r') as fp:
         return json.load(fp)
 
 
