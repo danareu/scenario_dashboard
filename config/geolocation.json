@@ -60,9 +60,9 @@
  "OFFDE": {"latitude": 54.7817, "longitude": 5.7129, "name": "OFFDE"},
  "OFFNL1": {"latitude": 53.0214, "longitude": 3.9441, "name": "OFFNL1"},
  "OFFNL2": {"latitude": 54.0916, "longitude": 4.8340, "name": "OFFNL2"},
- "OFFUKMid": {"latitude": 55.0909, "longitude": 1.8677, "name": "OFFUKMid"},
- "OFFUKScot": {"latitude": 57.172,  "longitude": 0.9338,  "name": "OFFUKScot"},
- "OFFUKSor": {"latitude": 53.0478, "longitude": 2.5049, "name": "OFFUKSor"},
+ "OFFGBMid": {"latitude": 55.0909, "longitude": 1.8677, "name": "OFFGBMid"},
+ "OFFGBScot": {"latitude": 57.172,  "longitude": 0.9338,  "name": "OFFGBScot"},
+ "OFFGBSor": {"latitude": 53.0478, "longitude": 2.5049, "name": "OFFGBSor"},
   "BG": {"latitude": 42.733883, "longitude": 25.48583, "name": "Bulgaria"},
   "GR": {"latitude": 39.074208, "longitude": 21.824312, "name": "Greece"},
   "HR": {"latitude": 45.1, "longitude": 15.2, "name": "Croatia"},
@@ -70,20 +70,7 @@
   "PI": {"latitude": 39.399872, "longitude": -8.224454	, "name": "Portugal"},
   "RO": {"latitude": 45.943161	, "longitude": 24.96676	, "name": "Romania"},
   "SI": {"latitude": 46.151241, "longitude": 14.995463, "name": "Slovenia"},
-  "ES": {"latitude": 40.463667, "longitude": -3.74922, "name": "Spain"},
   "SK": {"latitude": 48.669026, "longitude": 19.699024	, "name": "Slovakia"},
   "TR": {"latitude": 38.963745, "longitude": 35.243322, "name": "Turkey"},
   "NONEU_Balkan": {"latitude": 44.29182, "longitude":  19.24671, "name": "NONEU_Balkan"}
 }
-
-
-
-
-
-
-
-
-
-
-
-

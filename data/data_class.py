@@ -82,10 +82,6 @@ class DataRaw:
         self.df = self.df.groupby(by=header_mapping[self.key]["columns"][:-1] + ["Region_agg"], as_index=False).sum(
             numeric_only=True)
 
-    def replace_offshore(self):
-        # replace uk with gb
-        self.df.replace({"OFFGBMid": "OFFUKMid", "OFFGBScot": "OFFUKScot", "OFFGBSor": "OFFUKSor"}, inplace=True)
-
     def aggregate_column(self, column, method="sum"):
         # aggregate columns
         agg_cols = [c for c in header_mapping[self.key]["columns"][:-1] if c != column]

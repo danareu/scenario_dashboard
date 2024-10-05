@@ -126,18 +126,14 @@ def get_callbacks(app):
                 elif key in ["hydrogen_infrastructure"]:
                     # data_rw.aggregate_column(column="TS", method="sum")
                     data_rw.filter_column(column="Fuel", by_filter=["H2"])
-                    data_rw.replace_offshore()
                     df = DataRaw(directory=d, key='capacities')
-                    df.replace_offshore()
                     df.filter_column(column="Technology", by_filter=hydrogen_technologies)
                     df.aggregate_column(column="Technology", method="sum")
                     capacities.append(df.df)
                 elif key in ['trade_map']:
                     data_rw.filter_column(column="Fuel", by_filter=[fuel])
-                    data_rw.replace_offshore()
                     #prepare data for the pie chart
                     df = DataRaw(directory=d, key='capacities')
-                    df.replace_offshore()
                     df.filter_sector()
                     df.aggregate_technologies()
                     capacities.append(df.df)
