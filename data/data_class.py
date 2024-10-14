@@ -39,7 +39,7 @@ class DataRaw:
     def filter_sector(self):
         # filter only POWER sector technologies
         # TO more dynamic user input
-        df_input = os.getcwd() + "/config/Tag_Technology_to_Sector.csv", delimiter=";")
+        df_input = pd.read_csv(os.getcwd() + "/config/Tag_Technology_to_Sector.csv", delimiter=";")
         self.df = pd.merge(right=self.df, left=df_input, left_on="Technology", right_on="Technology", how="outer")
         # consider storages if power sector
         if self.sector == "Power":
