@@ -64,7 +64,7 @@ content = html.Div(children=
                 {'label': 'Production [TWh]', 'value': 'operation'},
                 {'label': 'Export 2050 [TWh]', 'value': 'export'},
                 {'label': 'Demand [TWh]', 'value': 'Demand [TWh]', 'disabled': True},
-                {'label': 'Hydrogen Infrastructure', 'value': 'hydrogen_infrastructure','disabled': True},
+                {'label': 'Hydrogen Infrastructure', 'value': 'hydrogen_infrastructure', 'disabled': False},
                 {'label': 'Trade Capacity Power [GW]', 'value': 'trade_map'}
             ],
             id="dropdownmenu",

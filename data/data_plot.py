@@ -7,6 +7,17 @@ import plotly.express as px
 from data.data_class import read_geojson_file
 
 
+def create_col_palette(df_list):
+    ## cycle through color palette
+    palette = cycle(px.colors.qualitative.Light24)
+    technology_list = []
+
+    for df in df_list:
+        technology_list += list(df['Technology'].unique())
+
+    return {t: colour_codes[t] if t in colour_codes.keys() else next(palette) for t in
+            pd.Series(technology_list).unique()}
+
 class PlotObject:
 
     def __init__(self, key, df_list, scenarios, year=None, sector="Power"):
@@ -15,19 +26,8 @@ class PlotObject:
         self.key = key_to_julia[key]
         self.sector = sector
         self.scenarios = scenarios
-        self.color_to_tech = self.create_col_palette() if key not in ["trade_map", "hydrogen_infrastructure",
+        self.color_to_tech = create_col_palette(df_list=self.df_list) if key not in ["trade_map", "hydrogen_infrastructure",
                                                                       "export"] else ""
-
-    def create_col_palette(self):
-        ## cycle through color palette
-        palette = cycle(px.colors.qualitative.Light24)
-        technology_list = []
-
-        for df in self.df_list:
-            technology_list += list(df['Technology'].unique())
-
-        return {t: colour_codes[t] if t in colour_codes.keys() else next(palette) for t in
-                pd.Series(technology_list).unique()}
 
     def stacked_bar_integrated(self, aggregation=True):
         """
@@ -254,9 +254,9 @@ def make_pie_chart_capacities(capacities: list, geojson: dict, lataxis: list, lo
     """
 
     # Filter capacities based on available technologies
+    #TODO probably not for h2
     capacities = capacities[capacities["Technology"].isin(colour_codes.keys())]
     list_traces = []
-
     # Iterate over unique regions
     for r in capacities["Region"].unique():
         x_domain = (geojson[r]['longitude'] - lonaxis[0]) / (lonaxis[1] - lonaxis[0])

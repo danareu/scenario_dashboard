@@ -128,7 +128,8 @@ def get_callbacks(app):
                     data_rw.filter_column(column="Fuel", by_filter=["H2"])
                     df = DataRaw(directory=d, key='capacities')
                     df.filter_column(column="Technology", by_filter=hydrogen_technologies)
-                    df.aggregate_column(column="Technology", method="sum")
+                    if len(hydrogen_technologies) > 1:
+                        df.aggregate_column(column="Technology", method="sum")
                     capacities.append(df.df)
                 elif key in ['trade_map']:
                     data_rw.filter_column(column="Fuel", by_filter=[fuel])

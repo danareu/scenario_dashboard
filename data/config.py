@@ -104,6 +104,6 @@ key_to_julia = {'capacities': 'TotalCapacityAnnual',
                 'operation': 'ProductionByTechnology',
                 'export': "Export",
                 'discountedcosts': 'TotalDiscountedCostByTechnology',
-                'hydrogen_infrastructure': "Export"}
+                'hydrogen_infrastructure': "TotalTradeCapacity"}
 
-hydrogen_technologies =["X_Electrolysis"]
+hydrogen_technologies = ["X_Electrolysis"]
