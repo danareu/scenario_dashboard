@@ -26,7 +26,7 @@ def get_callbacks(app):
             root.attributes("-topmost", True)
             root.withdraw()
             file_directory = filedialog.askopenfilename(title='Select Solution File',
-                                                        initialdir='/cluster/home/danare/git/dana/results/spatial',
+                                                        #initialdir='/cluster/home/danare/git/dana/results/spatial',
                                                         filetypes=(
                                                         ('text files', '*.txt'), ('solution files', '*.sol')))
             root.destroy()
