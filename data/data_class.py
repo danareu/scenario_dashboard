@@ -85,7 +85,9 @@ class DataRaw:
         # aggregate columns
         agg_cols = [c for c in header_mapping[self.key]["columns"][:-1] if c != column]
         if method == "sum":
+            print(self.df)
             self.df = self.df.groupby(by=agg_cols, as_index=False).sum(numeric_only=True)
+            print(self.df.columns)
         elif method == "max":
             self.df = self.df.groupby(by=agg_cols, as_index=False).max(numeric_only=True)
 

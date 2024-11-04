@@ -234,7 +234,6 @@ class PlotObject:
                               # coastlinecolor='rgb(0,35,74)',
                               showcoastlines=False,
                               landcolor='rgb(229, 229, 229)')))
-        fig.write_html("test.html")
         return fig
 
 

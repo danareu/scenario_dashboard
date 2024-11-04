@@ -26,7 +26,6 @@ def get_callbacks(app):
             root.attributes("-topmost", True)
             root.withdraw()
             file_directory = filedialog.askopenfilename(title='Select Solution File',
-                                                        #initialdir='/cluster/home/danare/git/dana/results/spatial',
                                                         filetypes=(
                                                         ('text files', '*.txt'), ('solution files', '*.sol')))
             root.destroy()
@@ -126,6 +125,7 @@ def get_callbacks(app):
                 elif key in ["hydrogen_infrastructure"]:
                     # data_rw.aggregate_column(column="TS", method="sum")
                     data_rw.filter_column(column="Fuel", by_filter=["H2"])
+                    print(data_rw.df)
                     df = DataRaw(directory=d, key='capacities')
                     df.filter_column(column="Technology", by_filter=hydrogen_technologies)
                     if len(hydrogen_technologies) > 1:
