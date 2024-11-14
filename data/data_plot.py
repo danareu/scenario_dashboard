@@ -1,5 +1,5 @@
 import pandas as pd
-from data.config import colour_codes, header_mapping, key_to_julia
+from data.config import colour_codes, key_to_julia
 from itertools import cycle
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
@@ -23,7 +23,7 @@ class PlotObject:
     def __init__(self, key, df_list, scenarios, year=None, sector="Power"):
         self.df_list = df_list
         self.year = year if year is not None else self.df_list[0]['Year'].unique()
-        self.key = key_to_julia[key]
+        self.key = key
         self.sector = sector
         self.scenarios = scenarios
         self.color_to_tech = create_col_palette(df_list=self.df_list) if key not in ["trade_map", "hydrogen_infrastructure",
@@ -71,8 +71,8 @@ class PlotObject:
                     list_technology.append(t)
 
         # Update layout of the figure
-        fig.update_layout(barmode='stack', height=2700, font=dict(size=26))
-        fig.update_yaxes(title_text=header_mapping[self.key]["units"])
+        fig.update_layout(barmode='stack', height=675*len(self.year), font=dict(size=26))
+        fig.update_yaxes(title_text=key_to_julia[self.key][0]["units"])
 
         return fig
 
@@ -120,7 +120,7 @@ class PlotObject:
                                                      ), row=j, col=i)
                             list_technology.append(t)
 
-        fig.update_yaxes(title_text=header_mapping[self.key]["units"])
+        fig.update_yaxes(title_text=key_to_julia[self.key][0]["units"])
         fig.update_layout(
                         height=450*len(region_list),
                           barmode='stack',

@@ -68,42 +68,46 @@ agg_countries = {
 
 order_legend = ['Gas', 'Nuclear', 'Oil', 'Biomass', 'Hydro Reservoir', 'Hydro Run-of-River', 'Pumped Hydro', 'Wind Onshore', 'Wind Offshore', 'PV', "Infeasibility_Power"]
 
-header_mapping = {"TotalCapacityAnnual":
-                      {"columns": ["Year", "Technology", "Region", "Value"],
-                       "units": "GW"},
-                  "ProductionByTechnology":
-                      {"columns": ["Year", "TS","Technology", "Fuel", "Region", "Value"],
-                       "units": "TWh"},
-                  "RateOfActivity":
-                      {"columns": ["Year", "TS", "Technology", "Mode", "Region", "Value"],
-                       "units": "TWh"},
-                  "ProductionByTechnologyAnnual":
-                      {"columns": ["Year", "Technology", "Fuel", "Region", "Value"],
-                       "units": "TWh"},
-                  "StorageLevelTSStart":
-                      {"columns": ["Technology", "Year", "TS", "Region", "Value"],
-                       "units": "TWh"},
-                  "Demand":
-                      {"columns": ["Year", "TS", "Technology", "Region", "Value"],
-                       "units": "TWh"},
-                  "UseAnnual":
-                      {"columns": ["Year", "Fuel", "Region", "Value"],
-                       "units": "TWh"},
-                  "TotalDiscountedCostByTechnology":
-                      ["Year", "Technology", "Region", "Value"],
-                  "TotalTradeCapacity":
-                      {"columns": ["Year", "Fuel", "Region1", "Region2", "Value"],
-                       "units": "GW"},
-                  "Export":
-                      {"columns": ["Year", "TS", "Fuel", "Region1", "Region2", "Value"]}}
-
-key_to_julia = {'capacities': 'TotalCapacityAnnual',
-                'trade_map': 'TotalTradeCapacity',
-                "demand":"Demand",
-                'storage_level': 'StorageLevelTSStart',
-                'operation': 'ProductionByTechnology',
-                'export': "Export",
-                'discountedcosts': 'TotalDiscountedCostByTechnology',
-                'hydrogen_infrastructure': "TotalTradeCapacity"}
+key_to_julia = {
+    'capacities': [
+        {"id": 'TotalCapacityAnnual',
+         "columns": ["Year", "Technology", "Region", "Value"],
+         "units": "GW"}
+    ],
+    'trade_map': [
+        {"id": 'TotalTradeCapacity',
+         "columns": ["Year", "Fuel", "Region1", "Region2", "Value"],
+         "units": "GW"}
+    ],
+    'demand': [
+        {"id": 'Demand',
+         "columns": ["Year", "TS", "Technology", "Region", "Value"],
+         "units": "TWh"}
+    ],
+    'storage_level': [
+        {"id": 'StorageLevelTSStart',
+         "columns": ["Technology", "Year", "TS", "Region", "Value"],
+         "units": "TWh"}
+    ],
+    'operation': [
+        {"id": 'ProductionByTechnology',
+         "columns": ["Year", "TS", "Technology", "Fuel", "Region", "Value"],
+         "units": "TWh"}
+    ],
+    'export': [
+        {"id": 'Export',
+         "columns": ["Year", "TS", "Fuel", "Region1", "Region2", "Value"]}
+    ],
+    'costs': [
+        {"id": 'TotalDiscountedCostByTechnology',
+         "columns": ["Year", "Technology", "Region", "Value"],
+         "units": "MEUR"}
+    ],
+    'hydrogen_infrastructure': [
+        {"id": 'TotalTradeCapacity',
+         "columns": ["Year", "Fuel", "Region1", "Region2", "Value"],
+         "units": "GW"}
+    ]
+}
 
 hydrogen_technologies = ["X_Electrolysis"]

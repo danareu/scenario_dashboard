@@ -88,6 +88,18 @@ def get_callbacks(app):
                     id="fuels",
                     value='power')], width={"size": 3})
             ]
+        elif key == "costs":
+            new_child = [
+                dbc.Col(children=html.H5('Aggregation:'),  width={"size": 2}),
+                dbc.Col(children=[dcc.Dropdown(
+                    options=[
+                        {'label': 'Region', 'value': 'Region'},
+                        {'label': 'Year', 'value': 'Year'},
+                        {'label': 'Year + Region', 'value': 'Region,Year'},
+                    ],
+                    id="fuels",
+                    value='')], width={"size": 3})
+            ]
         else:
             #TODO better way to only consider if field is there
             new_child = [dbc.Col(children=html.H5(),
@@ -125,7 +137,6 @@ def get_callbacks(app):
                 elif key in ["hydrogen_infrastructure"]:
                     # data_rw.aggregate_column(column="TS", method="sum")
                     data_rw.filter_column(column="Fuel", by_filter=["H2"])
-                    print(data_rw.df)
                     df = DataRaw(directory=d, key='capacities')
                     df.filter_column(column="Technology", by_filter=hydrogen_technologies)
                     if len(hydrogen_technologies) > 1:
@@ -143,6 +154,10 @@ def get_callbacks(app):
                     data_rw.filter_column(column="Fuel", by_filter=["Power"])
                     data_rw.filter_column(column="Year", by_filter=[2050])
                     data_rw.pivot_table()
+                elif key == "costs":
+                    data_rw.aggregate_technologies()
+                    data_rw.aggregate_column(column=fuel, method="sum")
+
                 list_dfs.append(data_rw.df)
 
                 ## group the data
@@ -151,7 +166,7 @@ def get_callbacks(app):
 
 
             # plot the graphs
-            plt_obj = PlotObject(key=key, year=[2018, 2030, 2040, 2050], sector="Power", df_list=list_dfs,
+            plt_obj = PlotObject(key=key, year=data_rw.df["Year"].unique(), sector="Power", df_list=list_dfs,
                                  scenarios=scenario)
 
             if key in ["capacities"]:
@@ -159,6 +174,12 @@ def get_callbacks(app):
                         [dcc.Graph(figure=plt_obj.stacked_bar_side(list_dfs=list_dfs))],
                         [],
                         []]
+            elif key == "costs":
+                return [[dcc.Graph(figure=plt_obj.stacked_bar_integrated(aggregation=False))],
+                        [],
+                        [],
+                        []]
+
             elif key in ["operation"]:
                 return [[dcc.Graph(figure=plt_obj.stacked_bar_integrated(aggregation=True))],
                         [dcc.Graph(figure=plt_obj.stacked_bar_side(list_dfs=df_list_yearly, x="Year", yearly=False))],
