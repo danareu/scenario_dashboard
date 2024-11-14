@@ -155,6 +155,7 @@ def get_callbacks(app):
                     data_rw.filter_column(column="Year", by_filter=[2050])
                     data_rw.pivot_table()
                 elif key == "costs":
+                    data_rw.add_costs()
                     data_rw.aggregate_technologies()
                     data_rw.aggregate_column(column=fuel, method="sum")
 

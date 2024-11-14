@@ -17,22 +17,23 @@ def read_geojson_file():
 
 class DataRaw:
 
-    def __init__(self, directory, key, sector="Power"):
+    def __init__(self, directory, key, sector="Power", index=0):
         self.directory = directory
         self.key = key
+        self.index = index
         self.sector = sector
-        self.df = self.read_sol_file(key=key_to_julia[self.key][0]["id"])
+        self.df = self.read_sol_file(key=key_to_julia[self.key][self.index]["id"])
 
     def read_sol_file(self, key):
         with open(self.directory, "r") as f:
             lines = f.read().splitlines()
             data_list = []
             for i, l in enumerate(lines, start=-1):
-                if l.startswith(f"{key_to_julia[self.key][0]['id']}["):
+                if l.startswith(f"{key_to_julia[self.key][self.index]['id']}["):
                     m = l.split('[', 1)[1].split(']')[0].split(",")
                     m.append(l.split(" ")[-1])
                     data_list.append(m)
-                    if not lines[i + 1].startswith(key_to_julia[self.key][0]["id"]):
+                    if not lines[i + 1].startswith(key_to_julia[self.key][self.index]["id"]):
                         break
         return self.create_df(data_list, key)
 
@@ -51,19 +52,19 @@ class DataRaw:
     def aggregate_technologies(self):
         # aggregate technologies
         self.df.replace(aggregation, inplace=True)
-        self.df = self.df.groupby(by=key_to_julia[self.key][0]["columns"][:-1], as_index=False).sum(numeric_only=True)
+        self.df = self.df.groupby(by=key_to_julia[self.key][self.index]["columns"][:-1], as_index=False).sum(numeric_only=True)
         return self.df
 
     def create_df(self, data_list, key):
         # create data frame
-        df = pd.DataFrame(columns=key_to_julia[self.key][0]["columns"],
+        df = pd.DataFrame(columns=key_to_julia[self.key][self.index]["columns"],
                           data=data_list)
 
         df['Year'] = pd.to_numeric(df['Year'])
         df['Value'] = pd.to_numeric(df['Value'])
 
         # convert unit if required from PJ to TWh
-        if key_to_julia[self.key][0]["id"] in ["ProductionByTechnologyAnnual", "Export", "UseAnnual", "RateOfActivity", "ProductionByTechnology", "ProductionByTechnology"]:
+        if key_to_julia[self.key][self.index]["id"] in ["ProductionByTechnologyAnnual", "Export", "UseAnnual", "RateOfActivity", "ProductionByTechnology", "ProductionByTechnology"]:
             df['Value'] = (df['Value'] / 3.6).round(0)
 
         # adapt storage charging and discharging
@@ -78,13 +79,13 @@ class DataRaw:
         # aggregate regions & offshore nodes
         self.df.replace({"OFFGBMid": "OFFUKMid", "OFFGBScot": "OFFUKScot", "OFFGBSor": "OFFUKSor"}, inplace=True)
         self.df['Region_agg'] = [r[3:5] if "OFF" in r else r[:2] for r in self.df['Region']]
-        self.df = self.df.groupby(by=key_to_julia[self.key][0]["columns"][:-1] + ["Region_agg"], as_index=False).sum(
+        self.df = self.df.groupby(by=key_to_julia[self.key][self.index]["columns"][:-1] + ["Region_agg"], as_index=False).sum(
             numeric_only=True)
 
     def aggregate_column(self, column, method="sum"):
         mapping = {'Year': 2050, 'Region': 'World'}
         # aggregate columns
-        agg_cols = [c for c in key_to_julia[self.key][0]["columns"][:-1] if c not in column.split(",")]
+        agg_cols = [c for c in key_to_julia[self.key][self.index]["columns"][:-1] if c not in column.split(",")]
         if method == "sum":
             self.df = self.df.groupby(by=agg_cols, as_index=False).sum(numeric_only=True)
         elif method == "max":
@@ -129,3 +130,19 @@ class DataRaw:
         demand_df["Value"] = demand_df["Value"]/3.6
         self.df = pd.concat([self.df, demand_df])
         self.df['TS'] = pd.to_numeric(self.df['TS'])
+
+    def add_costs(self):
+        list_df = [self.df]
+        for i in key_to_julia[self.key]:
+            df_tmp = self.read_sol_file(key=i["id"])
+            if len(df_tmp.columns) >= 4:
+                df_tmp.rename(columns={"Fuel": "Technology"}, inplace=True)
+                if len(df_tmp.columns) > 4:
+                    df_tmp = df_tmp.groupby(by=["Year", "Technology", "Region"], as_index=False).sum(numeric_only=True)
+            df_tmp["Technology"] = i["id"]
+            list_df.append(df_tmp)
+        self.df = pd.concat(list_df, ignore_index=True)
+
+
+
+

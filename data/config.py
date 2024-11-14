@@ -101,7 +101,15 @@ key_to_julia = {
     'costs': [
         {"id": 'TotalDiscountedCostByTechnology',
          "columns": ["Year", "Technology", "Region", "Value"],
-         "units": "MEUR"}
+         "units": "MEUR"},
+        {"id": "DiscountedAnnualTotalTradeCosts",
+         "columns": ["Year", "Region", "Value"]},
+        {"id": "DiscountedNewTradeCapacityCosts",
+         "columns": ["Year", "Fuel", "Region", "Region2", "Value"]},
+        {"id": "DiscountedAnnualCurtailmentCost",
+         "columns": ["Year", "Fuel", "Region", "Value"]},
+        {"id": "DiscountedSalvageValueTransmission",
+         "columns": ["Year", "Region", "Value"]}
     ],
     'hydrogen_infrastructure': [
         {"id": 'TotalTradeCapacity',
