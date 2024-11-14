@@ -7,7 +7,7 @@ This Dashboard aims to visualize model outputs from GENeSYS-MOD in a more effici
 - Total Production (Power Sector)
 - Export (Power Sector)
 - Transmission & Generation Expansion (Power Sector)
-- Technology Costs (MEUR)
+- Total System Costs (MEUR)
 
 ## Installation 
 1. Clone the repository
@@ -62,7 +62,8 @@ It requires the following Python packages:
 ![export](https://github.com/danareu/scenario_dashboard/assets/122786331/4c2e43fd-9e78-4fec-ad6d-6ae9bcad102f)
 
 **Total System Costs (aggregated by region or year) [MEUR]**
-Costs by Technology, not included storage, transmission, curtailment
+Objective Function Value consisting of TotalDiscountedCost, DiscountedAnnualTotalTradeCosts, DiscountedNewTradeCapacityCosts, DiscountedAnnualCurtailmentCost and DiscountedSalvageValueTransmission
+![Capture_totinv](https://github.com/user-attachments/assets/1ef9c42a-fa4c-4670-af23-0e3105ca4835)
 
 **Transmission & Generation Expansion in 2050 [GW]**
 Installed Capacities Power Sector & Installed Transmission Capacities for Power
