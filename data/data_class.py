@@ -91,11 +91,12 @@ class DataRaw:
         elif method == "max":
             self.df = self.df.groupby(by=agg_cols, as_index=False).max(numeric_only=True)
         # add missing columns
-        if len(column.split(",")) > 1:
-            for (k,v) in mapping.items():
-                self.df[k] = v
-        elif len(self.df[column].unique()) > 1:
-            self.df[column] = mapping[column]
+        if self.key == "costs":
+            if len(column.split(",")) > 1:
+                for (k,v) in mapping.items():
+                    self.df[k] = v
+            else:
+                self.df[column] = mapping[column]
 
 
     def filter_column(self, column, by_filter):
