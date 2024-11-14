@@ -134,7 +134,7 @@ class DataRaw:
 
     def add_costs(self):
         list_df = [self.df]
-        for i in key_to_julia[self.key]:
+        for i in key_to_julia[self.key][1:]:
             df_tmp = self.read_sol_file(key=i["id"])
             if len(df_tmp.columns) >= 4:
                 df_tmp.rename(columns={"Fuel": "Technology"}, inplace=True)
