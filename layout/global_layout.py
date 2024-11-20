@@ -73,13 +73,7 @@ content = html.Div(children=
         )], width={"size": 3})
     ], style={'margin': '12px'}),
     dbc.Row(children=[], id="fuel", style={'margin': '12px'}),
-    dbc.Row(children=dcc.Tabs([
-        dcc.Tab(label='Overview', children=[], id='summary'),
-        dcc.Tab(label='Regions', children=[], id="individual"),
-        dcc.Tab(label='Year', children=[], id="yearly"),
-
-    ], id="my_tabs"))
-
+    dbc.Row(children=[], id="my_tabs"),
 
     ], style=CONTENT_STYLE)
 

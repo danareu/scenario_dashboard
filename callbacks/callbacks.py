@@ -109,6 +109,18 @@ def get_callbacks(app):
         return new_child
 
     @app.callback(
+        Output('my_tabs', 'children'),
+        [Input(component_id='dropdownmenu', component_property='value')], prevent_initial_call=True
+    )
+    def add_tabs(key):
+        new_child = [
+            dcc.Tabs([
+                dcc.Tab(label=key_to_julia[key][0]["tabs"][i][0], children=[], id=key_to_julia[key][0]["tabs"][i][1])
+                for i in range(0,3)
+            ])]
+        return new_child
+
+    @app.callback(
         [Output(component_id='summary', component_property='children'),
          Output(component_id='individual', component_property='children'),
          Output(component_id='yearly', component_property='children'),
