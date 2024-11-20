@@ -69,7 +69,6 @@ content = html.Div(children=
                 {'label': 'Trade Capacity Power [GW]', 'value': 'trade_map'}
             ],
             id="dropdownmenu",
-            #value='capacities' #Not working
             placeholder="Select:"
         )], width={"size": 3})
     ], style={'margin': '12px'}),

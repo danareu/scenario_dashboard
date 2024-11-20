@@ -4,10 +4,10 @@ import pandas as pd
 from dash.dependencies import Input, Output, State, MATCH, ALL
 from dash import dcc, html, dash_table
 import dash_bootstrap_components as dbc
-from data.data_class import DataRaw
+from data.data_class import DataRaw, compute_difference
 from config.layout_config import *
 from data.data_plot import PlotObject
-from data.config import hydrogen_technologies
+from data.config import hydrogen_technologies, key_to_julia
 from layout.layout_general import discrete_background_color_bins
 import sys
 
@@ -158,13 +158,20 @@ def get_callbacks(app):
                     data_rw.add_costs()
                     data_rw.aggregate_technologies()
                     data_rw.aggregate_column(column=fuel, method="sum")
-
                 list_dfs.append(data_rw.df)
 
                 ## group the data
                 if key in ["capacities", "operation"]:
                     df_list_yearly = [df.groupby(by=['Year', 'Technology', 'Region'], as_index=False).sum(numeric_only=True) for df in list_dfs]
-
+            # add difference if two scenarios
+            diff_plot = []
+            if len(list_dfs) == 2 and key == "costs":
+                plt_obj_diff = PlotObject(key=key,
+                                          year=data_rw.df["Year"].unique(),
+                                          sector="Power",
+                                          df_list=[compute_difference(df1=list_dfs[0], df2=list_dfs[1])],
+                                          scenarios=[f"{scenario[0]}-{scenario[1]}"])
+                diff_plot = [dcc.Graph(figure=plt_obj_diff.stacked_bar_integrated(aggregation=False))]
 
             # plot the graphs
             plt_obj = PlotObject(key=key, year=data_rw.df["Year"].unique(), sector="Power", df_list=list_dfs,
@@ -177,7 +184,7 @@ def get_callbacks(app):
                         []]
             elif key == "costs":
                 return [[dcc.Graph(figure=plt_obj.stacked_bar_integrated(aggregation=False))],
-                        [],
+                        diff_plot,
                         [],
                         []]
 

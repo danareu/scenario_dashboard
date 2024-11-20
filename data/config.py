@@ -72,34 +72,41 @@ key_to_julia = {
     'capacities': [
         {"id": 'TotalCapacityAnnual',
          "columns": ["Year", "Technology", "Region", "Value"],
-         "units": "GW"}
+         "units": "GW",
+         "tabs": [("Overview","summary"), ("Regions","individual"), ("Year","yearly")]}
     ],
     'trade_map': [
         {"id": 'TotalTradeCapacity',
          "columns": ["Year", "Fuel", "Region1", "Region2", "Value"],
-         "units": "GW"}
+         "units": "GW",
+         "tabs": [("Overview","summary"), ("Regions","individual"), ("Year","yearly")]}
     ],
     'demand': [
         {"id": 'Demand',
          "columns": ["Year", "TS", "Technology", "Region", "Value"],
-         "units": "TWh"}
+         "tabs": [("Overview", "summary"), ("Regions", "individual"), ("Year", "yearly")],
+        "units": "TWh"}
     ],
     'storage_level': [
         {"id": 'StorageLevelTSStart',
          "columns": ["Technology", "Year", "TS", "Region", "Value"],
+        "tabs": [("Overview", "summary"), ("Regions", "individual"), ("Year", "yearly")],
          "units": "TWh"}
     ],
     'operation': [
         {"id": 'ProductionByTechnology',
+        "tabs": [("Overview", "summary"), ("Regions", "individual"), ("Year", "yearly")],
          "columns": ["Year", "TS", "Technology", "Fuel", "Region", "Value"],
          "units": "TWh"}
     ],
     'export': [
         {"id": 'Export',
+        "tabs": [("Overview", "summary"), ("Regions", "individual"), ("Year", "yearly")],
          "columns": ["Year", "TS", "Fuel", "Region1", "Region2", "Value"]}
     ],
     'costs': [
         {"id": 'TotalDiscountedCostByTechnology',
+        "tabs": [("Comparison", "summary"), ("Difference", "individual"), ("", "yearly")],
          "columns": ["Year", "Technology", "Region", "Value"],
          "units": "MEUR"},
         {"id": "DiscountedAnnualTotalTradeCosts",
@@ -113,6 +120,7 @@ key_to_julia = {
     ],
     'hydrogen_infrastructure': [
         {"id": 'TotalTradeCapacity',
+        "tabs": [("Overview", "summary"), ("Regions", "individual"), ("Year", "yearly")],
          "columns": ["Year", "Fuel", "Region1", "Region2", "Value"],
          "units": "GW"}
     ]

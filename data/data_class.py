@@ -15,6 +15,15 @@ def read_geojson_file():
         return json.load(fp)
 
 
+def compute_difference(df1, df2):
+    diff = df1.merge(df2,
+                     how="outer",
+                     left_on=['Year', 'Technology', 'Region'],
+                     right_on=['Year', 'Technology', 'Region'],)
+    diff["Value"] = diff["Value_x"] - diff["Value_y"]
+    return diff
+
+
 class DataRaw:
 
     def __init__(self, directory, key, sector="Power", index=0):
