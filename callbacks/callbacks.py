@@ -179,14 +179,14 @@ def get_callbacks(app):
             diff_plot = []
             if len(list_dfs) == 2 and key == "costs":
                 plt_obj_diff = PlotObject(key=key,
-                                          year=data_rw.df["Year"].unique(),
+                                          year=[2050],
                                           sector="Power",
                                           df_list=[compute_difference(df1=list_dfs[0], df2=list_dfs[1])],
                                           scenarios=[f"{scenario[0]}-{scenario[1]}"])
                 diff_plot = [dcc.Graph(figure=plt_obj_diff.stacked_bar_integrated(aggregation=False))]
 
             # plot the graphs
-            plt_obj = PlotObject(key=key, year=data_rw.df["Year"].unique(), sector="Power", df_list=list_dfs,
+            plt_obj = PlotObject(key=key, year=[2050], sector="Power", df_list=list_dfs,
                                  scenarios=scenario)
 
             if key in ["capacities"]:
