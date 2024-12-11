@@ -31,14 +31,14 @@ Dash is running on http://127.0.0.1:8050/
 ## Dependencies
 The scenario_dashboard was written and tested with Python 3.9.
 It requires the following Python packages:
-- pandas
-- dash_bootstrap_components
-- dash
-- pyyaml
+- pandas==2.2.3
+- dash_bootstrap_components==1.6.0
+- dash==2.18.1
+- pyyaml==6.0.2
 - tkinter
 - itertools
 - json
-- plotly
+- plotly==5.24.1
 
 
 ## Usage
