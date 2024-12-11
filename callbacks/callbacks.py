@@ -100,6 +100,18 @@ def get_callbacks(app):
                     id="fuels",
                     value='')], width={"size": 3})
             ]
+        elif key == "export":
+            new_child = [
+                dbc.Col(children=html.H5('Year:'),  width={"size": 2}),
+                dbc.Col(children=[dcc.Dropdown(
+                    options=[
+                        {'label': '2030', 'value': '2030'},
+                        {'label': '2040', 'value': '2040'},
+                        {'label': '2050', 'value': '2050'},
+                    ],
+                    id="fuels",
+                    value='')], width={"size": 3})
+            ]
         else:
             #TODO better way to only consider if field is there
             new_child = [dbc.Col(children=html.H5(),
@@ -164,11 +176,15 @@ def get_callbacks(app):
                 elif key in ["export"]:
                     data_rw.aggregate_column(column="TS", method="sum")
                     data_rw.filter_column(column="Fuel", by_filter=["Power"])
-                    data_rw.filter_column(column="Year", by_filter=[2050])
+                    fuel = int(fuel)
+                    data_rw.filter_column(column="Year", by_filter=[fuel])
                     data_rw.pivot_table()
                 elif key == "costs":
                     data_rw.add_costs()
                     data_rw.aggregate_technologies()
+                    data_rw.aggregate_column(column=fuel, method="sum")
+                elif key == "emissions":
+                    data_rw.df["Technology"] = "CO2"
                     data_rw.aggregate_column(column=fuel, method="sum")
                 list_dfs.append(data_rw.df)
 
@@ -186,7 +202,10 @@ def get_callbacks(app):
                 diff_plot = [dcc.Graph(figure=plt_obj_diff.stacked_bar_integrated(aggregation=False))]
 
             # plot the graphs
-            plt_obj = PlotObject(key=key, year=[2050], sector="Power", df_list=list_dfs,
+            plt_obj = PlotObject(key=key,
+                                 year=fuel if isinstance(fuel, int) else list_dfs[0]["Year"].unique(),
+                                 sector="Power",
+                                 df_list=list_dfs,
                                  scenarios=scenario)
 
             if key in ["capacities"]:
