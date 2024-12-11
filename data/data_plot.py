@@ -85,7 +85,7 @@ class PlotObject:
                             subplot_titles=[f"{r}_{s}" for r in region_list for s in self.scenarios])
         for i, df in enumerate(list_dfs, start=1):
             if yearly:
-                df = df[df["Year"] == 2030]
+                df = df[df["Year"] == 2050]
             list_technology = []
             for j, r in enumerate(region_list, start=1):
                 # check if region is in data
@@ -100,12 +100,12 @@ class PlotObject:
                             fig.add_trace(
                                 go.Scatter(x=sorted_df[x],
                                            y=sorted_df['Value'],
-                                           name="Demand",
+                                           name=t,
                                            mode='lines',
-                                           fill='none',
+                                           fillcolor=self.color_to_tech[t],
+                                           line_color=self.color_to_tech[t],
                                            stackgroup="Demand",
-                                           showlegend=True if t not in list_technology else False,
-                                           marker=dict(color="maroon"),
+                                           showlegend=True if j ==1 else False,
                                            ), row=j, col=i)
                         else:
                             fig.add_trace(go.Scatter(x=sorted_df[x],

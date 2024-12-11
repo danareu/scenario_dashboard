@@ -73,13 +73,13 @@ key_to_julia = {
         {"id": 'TotalCapacityAnnual',
          "columns": ["Year", "Technology", "Region", "Value"],
          "units": "GW",
-         "tabs": [("Overview","summary"), ("Regions","individual"), ("Year","yearly")]}
+         "tabs": [("Overview","summary"), ("Regions","individual"), ("","yearly")]}
     ],
     'trade_map': [
         {"id": 'TotalTradeCapacity',
          "columns": ["Year", "Fuel", "Region1", "Region2", "Value"],
          "units": "GW",
-         "tabs": [("Overview","summary"), ("Regions","individual"), ("Year","yearly")]}
+         "tabs": [("Overview","summary"), ("","individual"), ("","yearly")]}
     ],
     'demand': [
         {"id": 'Demand',
@@ -101,7 +101,7 @@ key_to_julia = {
     ],
     'export': [
         {"id": 'Export',
-        "tabs": [("Overview", "summary"), ("Regions", "individual"), ("Year", "yearly")],
+        "tabs": [("Overview", "summary"), ("", "individual"), ("", "yearly")],
          "columns": ["Year", "TS", "Fuel", "Region1", "Region2", "Value"]}
     ],
     'costs': [
