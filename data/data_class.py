@@ -137,7 +137,7 @@ class DataRaw:
 
         # rename columns
         demand_df.replace(to_replace="Power", value="Demand", inplace=True)
-        demand_df["Value"] = demand_df["Value"]/3.6
+        demand_df["Value"] = demand_df["Value"]/(-3.6)
         self.df = pd.concat([self.df, demand_df])
         self.df['TS'] = pd.to_numeric(self.df['TS'])
 

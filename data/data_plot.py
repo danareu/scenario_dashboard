@@ -96,7 +96,7 @@ class PlotObject:
                             'Technology'].unique()
                     for t in technologies:
                         sorted_df = df[(df['Region'] == r) & (df['Technology'] == t)].sort_values(by=x)
-                        if t == "Demand":
+                        if t in ["Demand", "Heat_Low_Residential", "Heat_Low_Industrial", "Heat_Medium_Industrial", "Heat_High_Industrial", "Mobility_Passenger", "Mobility_Freight"]:
                             fig.add_trace(
                                 go.Scatter(x=sorted_df[x],
                                            y=sorted_df['Value'],
