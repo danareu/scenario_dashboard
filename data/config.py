@@ -123,6 +123,12 @@ key_to_julia = {
         "tabs": [("Overview", "summary"), ("Regions", "individual"), ("Year", "yearly")],
          "columns": ["Year", "Fuel", "Region1", "Region2", "Value"],
          "units": "GW"}
+    ],
+    "emissions": [
+        {"id": "AnnualTechnologyEmission",
+         "tabs": [("Summary", "summary"), ("Difference", "individual"), ("", "yearly")],
+         "columns": ["Year", "Technology", "Emission", "Region", "Value"],
+         "units": "Mt"}
     ]
 }
 

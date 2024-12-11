@@ -88,7 +88,7 @@ def get_callbacks(app):
                     id="fuels",
                     value='power')], width={"size": 3})
             ]
-        elif key == "costs":
+        elif key in ["emissions", "costs"]:
             new_child = [
                 dbc.Col(children=html.H5('Aggregation:'),  width={"size": 2}),
                 dbc.Col(children=[dcc.Dropdown(
@@ -219,6 +219,12 @@ def get_callbacks(app):
                         [],
                         []]
 
+            elif key in ["emissions"]:
+                return [[dcc.Graph(figure=plt_obj.stacked_bar_integrated(aggregation=False))] if fuel != "Region"
+                        else [dcc.Graph(figure=plt_obj.stacked_bar_side(list_dfs=list_dfs))],
+                        diff_plot,
+                        [],
+                        []]
             elif key in ["operation"]:
                 return [[dcc.Graph(figure=plt_obj.stacked_bar_integrated(aggregation=True))],
                         [dcc.Graph(figure=plt_obj.stacked_bar_side(list_dfs=df_list_yearly, x="Year", yearly=False))],

@@ -100,7 +100,7 @@ class DataRaw:
         elif method == "max":
             self.df = self.df.groupby(by=agg_cols, as_index=False).max(numeric_only=True)
         # add missing columns
-        if self.key == "costs":
+        if self.key in ["emissions", "costs"]:
             if len(column.split(",")) > 1:
                 for (k,v) in mapping.items():
                     self.df[k] = v
